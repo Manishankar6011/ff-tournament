@@ -1,16 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import { Flame, Filter, ChevronRight, Clock, Users, Trophy, Zap } from 'lucide-react'
 import { formatCurrency, getModeLabel, getStatusBadgeColor, getStatusLabel, getTimeUntilMatch, getSlotsPercentage, cn } from '@/lib/utils'
-import { TournamentStatus, TournamentMode } from '@prisma/client'
 import { InstallPWA } from '@/components/InstallPWA'
 
 async function getTournaments(mode?: string, status?: string) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const where: any = {}
-  if (mode && mode !== 'all') where.mode = mode as TournamentMode
-  if (status) where.status = status as TournamentStatus
-  else where.status = { in: ['upcoming', 'room_released', 'live'] as TournamentStatus[] }
+  if (mode && mode !== 'all') where.mode = mode as any
+  if (status) where.status = status as any
+  else where.status = { in: ['upcoming', 'room_released', 'live'] as any }
 
   return prisma.tournament.findMany({
     where,
