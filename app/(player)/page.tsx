@@ -170,13 +170,20 @@ export default async function HomePage({
         {/* Tournament List */}
         <div className="space-y-4">
           {tournaments.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center glass-card rounded-3xl border border-white/5">
-              <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-4">
-                <Filter className="w-8 h-8 text-gray-600" />
-              </div>
-              <p className="text-gray-300 font-bold text-lg mb-1">Koi tournament nahi mila</p>
-              <p className="text-sm text-gray-500 max-w-[200px]">Naye tournaments jaldi hi add honge. Thodi der baad check karein!</p>
-            </div>
+            <TournamentCard
+              tournament={{
+                id: 'dummy',
+                title: 'Daily Solo Battle (Demo)',
+                status: 'upcoming',
+                mode: 'solo',
+                entryFee: 10,
+                prizePool: 250,
+                perKillPoint: 2,
+                matchDatetime: new Date(Date.now() + 86400000), // tomorrow
+                slotsFilled: 5,
+                maxSlots: 48,
+              }}
+            />
           ) : (
             tournaments.map((t: any) => (
               <TournamentCard key={t.id} tournament={t} />
