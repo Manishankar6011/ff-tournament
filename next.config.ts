@@ -4,8 +4,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Skip prerendering of pages that require env vars / auth
-  // Pages using Supabase auth will be rendered at request time
   experimental: {
     serverActions: { allowedOrigins: ['localhost:3000'] },
   },
