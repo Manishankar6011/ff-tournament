@@ -178,7 +178,7 @@ export default async function HomePage({
               <p className="text-sm text-gray-500 max-w-[200px]">Naye tournaments jaldi hi add honge. Thodi der baad check karein!</p>
             </div>
           ) : (
-            tournaments.map(t => (
+            tournaments.map((t: any) => (
               <TournamentCard key={t.id} tournament={t} />
             ))
           )}

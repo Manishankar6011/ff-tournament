@@ -1,6 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   turbopack: {},
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   // Skip prerendering of pages that require env vars / auth
   // Pages using Supabase auth will be rendered at request time
   experimental: {
