@@ -32,10 +32,17 @@ function getPrismaClient(): PrismaClient {
 }
 
 // Proxy so `prisma.user.findMany(...)` etc. work normally
-// but the actual PrismaClient is never instantiated during build
 export const prisma = new Proxy({} as PrismaClient, {
   get(_target, prop: string | symbol) {
-    if (prop === 'then' || prop === 'catch' || prop === 'finally') {
+    if (typeof prop === 'symbol') return undefined
+    if (
+      prop === 'then' ||
+      prop === 'catch' ||
+      prop === 'finally' ||
+      prop === '$$typeof' ||
+      prop === '__esModule' ||
+      prop === 'asymmetricMatch'
+    ) {
       return undefined
     }
     return (getPrismaClient() as never)[prop]
