@@ -1,32 +1,40 @@
 import { PrismaClient } from '@prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
+declare global {
+  // eslint-disable-next-line no-var
+  var __prisma: PrismaClient | undefined
 }
 
-function createPrismaClient() {
+function createPrismaClient(): PrismaClient {
   const connectionString = process.env.DATABASE_URL
-
-  // During build time on Vercel, DATABASE_URL may not be available.
-  // In that case, return a dummy client that will only fail at runtime (not build time).
-  if (!connectionString) {
-    if (process.env.NODE_ENV === 'production') {
-      // Return a plain PrismaClient without adapter; it will error at runtime if used without DB
-      return new PrismaClient()
-    }
-    throw new Error('DATABASE_URL is not set. Please check your environment variables.')
+  if (connectionString) {
+    const adapter = new PrismaPg({ connectionString })
+    return new PrismaClient({
+      adapter,
+      log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+    })
   }
-
-  const adapter = new PrismaPg({ connectionString })
+  // Fallback: plain client (will use DATABASE_URL from env at runtime)
   return new PrismaClient({
-    adapter,
     log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
   })
 }
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient()
+// Lazy singleton — client is created only on first actual use, not at import time
+function getPrismaClient(): PrismaClient {
+  if (!global.__prisma) {
+    global.__prisma = createPrismaClient()
+  }
+  return global.__prisma
+}
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+// Proxy so `prisma.user.findMany(...)` etc. work normally
+// but the actual PrismaClient is never instantiated during build
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_target, prop: string | symbol) {
+    return (getPrismaClient() as never)[prop]
+  },
+})
 
 export default prisma
