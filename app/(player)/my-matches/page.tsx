@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
@@ -23,8 +24,8 @@ export default async function MyMatchesPage() {
     orderBy: { joinedAt: 'desc' },
   })
 
-  const upcoming = slots.filter(s => ['upcoming', 'room_released', 'live'].includes(s.tournament.status))
-  const completed = slots.filter(s => ['completed', 'cancelled'].includes(s.tournament.status))
+  const upcoming = slots.filter((s: any) => ['upcoming', 'room_released', 'live'].includes(s.tournament.status))
+  const completed = slots.filter((s: any) => ['completed', 'cancelled'].includes(s.tournament.status))
 
   return (
     <div className="min-h-screen">
