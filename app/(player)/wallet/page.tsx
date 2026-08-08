@@ -42,6 +42,19 @@ export default function WalletPage() {
       setLoading(false)
     }
     fetchData()
+
+    // Check URL params for payment status (PhonePe redirect)
+    const searchParams = new URLSearchParams(window.location.search)
+    const paymentStatus = searchParams.get('payment')
+    const errorStatus = searchParams.get('error')
+
+    if (paymentStatus === 'success') {
+      toast.success('Wallet recharged successfully! 🎉')
+      window.history.replaceState(null, '', '/wallet')
+    } else if (errorStatus) {
+      toast.error('Payment failed or cancelled.')
+      window.history.replaceState(null, '', '/wallet')
+    }
   }, [])
 
   const handleAddMoney = async () => {
@@ -62,37 +75,16 @@ export default function WalletPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount, type: 'deposit' }),
       })
-      const { orderId, amount: orderAmount } = await res.json()
-
-      await openRazorpayCheckout({
-        amount: orderAmount * 100, // paise
-        currency: 'INR',
-        name: 'FF Tournament',
-        description: 'Wallet Recharge',
-        order_id: orderId,
-        prefill: { name: user?.name },
-        handler: async (response) => {
-          const verifyRes = await fetch('/api/wallet/verify-payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(response),
-          })
-          if (verifyRes.ok) {
-            toast.success(`${formatCurrency(amount)} wallet mein add ho gaya! 🎉`)
-            // Refresh
-            const [uRes, tRes] = await Promise.all([
-              fetch('/api/auth/me'),
-              fetch('/api/wallet/transactions'),
-            ])
-            setUser(await uRes.json())
-            setTransactions(await tRes.json())
-          } else {
-            toast.error('Payment verify nahi hua. Support se contact karo.')
-          }
-          setAddingMoney(false)
-        },
-        modal: { ondismiss: () => setAddingMoney(false) },
-      })
+      
+      const data = await res.json()
+      
+      if (data.url) {
+        // Redirect to PhonePe payment page
+        window.location.href = data.url
+      } else {
+        toast.error(data.error || 'Payment gateway connection failed')
+        setAddingMoney(false)
+      }
     } catch {
       toast.error('Kuch gadbad ho gayi')
       setAddingMoney(false)
