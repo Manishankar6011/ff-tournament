@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FF Tournament Platform 🎮🔥
 
-## Getting Started
+> **Free Fire Tournament Platform** — India ka #1 competitive Free Fire tournament website.
+> Players join karte hain, tournaments khelte hain, aur real prizes jeette hain!
 
-First, run the development server:
+## Tech Stack
+
+| Layer | Tech |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Database | Supabase (PostgreSQL) |
+| ORM | Prisma |
+| Auth | Supabase Auth (Phone OTP + Email/Password) |
+| Payments | Razorpay (Sandbox) |
+| Styling | Tailwind CSS |
+| Hosting | Vercel |
+
+## Setup Guide
+
+### 1. Environment Variables
+
+```bash
+cp .env.local.example .env.local
+```
+
+Fill in the values from Supabase Dashboard and Razorpay Dashboard.
+
+### 2. Database Setup
+
+```bash
+# Generate Prisma migration
+npx prisma migrate dev --name init
+
+# Generate Prisma client
+npx prisma generate
+```
+
+### 3. Admin User Setup
+
+1. Create user in Supabase Dashboard → Authentication → Users
+2. Open `npx prisma studio`
+3. Add row in `users` table with that user's `supabase_id` and `role = admin`
+
+### 4. Run Locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Player App:** http://localhost:3000
+- **Admin Panel:** http://localhost:3000/admin/login
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## User Journey (Player)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+Phone OTP Login → Profile Setup → Tournament List → Join Tournament
+→ Room Released (notification) → Play Match → See Results → Withdraw Prize
+```
 
-## Learn More
+## Admin Journey
 
-To learn more about Next.js, take a look at the following resources:
+```
+Admin Login → Dashboard → Create Tournament → Monitor Slots
+→ Release Room → Enter Results → Publish → Manage Withdrawals
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Prize Calculation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+Total Points = Placement Points + (Kills × per_kill_point)
+Prize = (Prize Pool × rank_percentage / 100) + (Kills × per_kill_reward)
+```
