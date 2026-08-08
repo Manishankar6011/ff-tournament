@@ -1,8 +1,9 @@
-export const dynamic = 'force-dynamic'
 import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
+
+export const dynamic = 'force-dynamic'
 
 const setupSchema = z.object({
   name: z.string().min(2).max(50),

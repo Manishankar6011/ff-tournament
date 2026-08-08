@@ -1,8 +1,9 @@
-export const dynamic = 'force-dynamic'
 import { prisma } from '@/lib/prisma'
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import crypto from 'crypto'
+
+export const dynamic = 'force-dynamic'
 
 // POST /api/wallet/verify-payment
 export async function POST(request: Request) {

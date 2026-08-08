@@ -1,6 +1,7 @@
-export const dynamic = 'force-dynamic'
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
+
+export const dynamic = 'force-dynamic'
 
 // GET /api/rooms/[tournamentId] — Get room details (for admin)
 export async function GET(

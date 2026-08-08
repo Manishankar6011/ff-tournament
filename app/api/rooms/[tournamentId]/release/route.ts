@@ -1,8 +1,9 @@
-export const dynamic = 'force-dynamic'
 import { prisma } from '@/lib/prisma'
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
+
+export const dynamic = 'force-dynamic'
 
 const releaseSchema = z.object({
   roomIdCode: z.string().min(1).max(20),

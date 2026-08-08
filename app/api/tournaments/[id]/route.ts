@@ -1,7 +1,8 @@
-export const dynamic = 'force-dynamic'
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+
+export const dynamic = 'force-dynamic'
 
 // GET /api/tournaments/[id]
 export async function GET(

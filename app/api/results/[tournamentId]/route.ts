@@ -1,9 +1,10 @@
-export const dynamic = 'force-dynamic'
 import { prisma } from '@/lib/prisma'
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { calculateResults, DEFAULT_POINT_TABLE, DEFAULT_PRIZE_DISTRIBUTION } from '@/lib/points-calculator'
+
+export const dynamic = 'force-dynamic'
 
 const resultsSchema = z.object({
   slots: z.array(z.object({
