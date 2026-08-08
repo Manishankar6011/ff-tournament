@@ -102,7 +102,7 @@ export default async function HomePage({
           </h2>
           
           <p className="text-sm text-gray-400 mb-8 max-w-sm mx-auto leading-relaxed">
-            India's most trusted esports platform. Compete in daily Solo, Duo, and Squad tournaments and get instant payouts directly to your wallet!
+            India&apos;s most trusted esports platform. Compete in daily Solo, Duo, and Squad tournaments and get instant payouts directly to your wallet!
           </p>
 
           {!dbUser && (

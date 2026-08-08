@@ -47,7 +47,7 @@ export default async function MyMatchesPage() {
             </div>
           ) : (
             <div className="space-y-3">
-              {upcoming.map(slot => (
+              {upcoming.map((slot: any) => (
                 <MatchCard key={slot.id} slot={slot} />
               ))}
             </div>
@@ -59,7 +59,7 @@ export default async function MyMatchesPage() {
           <section>
             <h2 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">Completed</h2>
             <div className="space-y-3">
-              {completed.map(slot => (
+              {completed.map((slot: any) => (
                 <MatchCard key={slot.id} slot={slot} />
               ))}
             </div>
