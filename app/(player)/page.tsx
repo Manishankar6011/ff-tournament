@@ -214,10 +214,11 @@ export default async function HomePage({
           <Flame className="w-6 h-6 text-white" />
         </div>
         <p className="text-xs text-gray-500 font-medium mb-4">© 2026 FF Tournament. All rights reserved.</p>
-        <div className="flex justify-center gap-4 text-xs text-gray-400">
-          <Link href="#" className="hover:text-orange-400 transition-colors">Terms</Link>
-          <Link href="#" className="hover:text-orange-400 transition-colors">Privacy</Link>
-          <Link href="#" className="hover:text-orange-400 transition-colors">Support</Link>
+        <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-400">
+          <Link href="/terms" className="hover:text-orange-400 transition-colors">Terms & Conditions</Link>
+          <Link href="/privacy" className="hover:text-orange-400 transition-colors">Privacy Policy</Link>
+          <Link href="/refund" className="hover:text-orange-400 transition-colors">Refund Policy</Link>
+          <Link href="/contact" className="hover:text-orange-400 transition-colors">Contact Us</Link>
           <Link href="/admin/login" className="hover:text-orange-400 transition-colors">Admin Login</Link>
         </div>
       </footer>
