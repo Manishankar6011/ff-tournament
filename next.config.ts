@@ -7,6 +7,7 @@ const nextConfig = {
   experimental: {
     serverActions: { allowedOrigins: ['localhost:3000'] },
   },
+  serverExternalPackages: ['pg', '@prisma/adapter-pg'],
   images: {
     remotePatterns: [
       {
