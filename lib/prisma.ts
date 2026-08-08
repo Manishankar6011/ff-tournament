@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { Pool } from 'pg'
 import { PrismaPg } from '@prisma/adapter-pg'
 
 declare global {
@@ -9,7 +10,8 @@ declare global {
 function createPrismaClient(): PrismaClient {
   const connectionString = process.env.DATABASE_URL
   if (connectionString) {
-    const adapter = new PrismaPg({ connectionString })
+    const pool = new Pool({ connectionString })
+    const adapter = new PrismaPg(pool)
     return new PrismaClient({
       adapter,
       log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
