@@ -35,6 +35,9 @@ function getPrismaClient(): PrismaClient {
 // but the actual PrismaClient is never instantiated during build
 export const prisma = new Proxy({} as PrismaClient, {
   get(_target, prop: string | symbol) {
+    if (prop === 'then' || prop === 'catch' || prop === 'finally') {
+      return undefined
+    }
     return (getPrismaClient() as never)[prop]
   },
 })
