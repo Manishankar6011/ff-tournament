@@ -279,7 +279,7 @@ export default function WalletPage() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-white font-medium truncate">{tx.description || tx.type}</p>
                     <p className="text-xs text-gray-500">
-                      {new Date(tx.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                      {new Date(tx.createdAt).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
                   <div className="text-right">

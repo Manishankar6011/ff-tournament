@@ -92,7 +92,7 @@ export default async function AdminTournamentDetailPage({
           { label: 'Entry Fee', value: formatCurrency(Number(tournament.entryFee)), color: 'text-white' },
           { label: 'Prize Pool', value: formatCurrency(Number(tournament.prizePool)), color: 'text-orange-400' },
           { label: 'Slots', value: `${tournament.slotsFilled}/${tournament.maxSlots}`, color: 'text-blue-400' },
-          { label: 'Match Time', value: new Date(tournament.matchDatetime).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), color: 'text-white' },
+          { label: 'Match Time', value: new Date(tournament.matchDatetime).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), color: 'text-white' },
         ].map(s => (
           <div key={s.label} className="glass-card rounded-xl p-4">
             <p className="text-xs text-gray-400 mb-1">{s.label}</p>

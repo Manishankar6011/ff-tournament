@@ -62,10 +62,10 @@ export default async function AdminTournamentsPage() {
                 </td>
                 <td className="px-4 py-3">
                   <p className="text-sm text-white">
-                    {new Date(t.matchDatetime).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+                    {new Date(t.matchDatetime).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: '2-digit', month: 'short' })}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {new Date(t.matchDatetime).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                    {new Date(t.matchDatetime).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </td>
                 <td className="px-4 py-3">

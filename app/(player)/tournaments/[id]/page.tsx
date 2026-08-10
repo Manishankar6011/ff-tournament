@@ -104,7 +104,7 @@ export default async function TournamentDetailPage({
             </div>
             <p className="text-base font-bold text-white">{getTimeUntilMatch(tournament.matchDatetime)}</p>
             <p className="text-xs text-gray-500 mt-0.5">
-              {new Date(tournament.matchDatetime).toLocaleDateString('en-IN', {
+              {new Date(tournament.matchDatetime).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata',
                 day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
               })}
             </p>

@@ -122,7 +122,7 @@ export default async function AdminDashboardPage() {
                   <div>
                     <p className="text-sm font-medium text-white">{t.title}</p>
                     <p className="text-xs text-gray-500">
-                      {new Date(t.matchDatetime).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                      {new Date(t.matchDatetime).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit' })}
                       {' '} • {t.slotsFilled}/{t.maxSlots} slots
                     </p>
                   </div>

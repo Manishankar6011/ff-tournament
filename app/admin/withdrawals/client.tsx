@@ -57,7 +57,7 @@ export default function AdminWithdrawalsClient({ withdrawals: initial }: { withd
                 <p className="text-sm text-white font-mono font-medium">{w.upiId}</p>
               </div>
               <p className="text-xs text-gray-500 mt-2">
-                Requested: {new Date(w.requestedAt).toLocaleString('en-IN')}
+                Requested: {new Date(w.requestedAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
               </p>
               {w.reason && <p className="text-xs text-red-400 mt-1">Reason: {w.reason}</p>}
             </div>

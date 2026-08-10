@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
+import { sendAppNotification } from '@/lib/webpush'
 
 export const dynamic = 'force-dynamic'
 
@@ -53,6 +54,15 @@ export async function PUT(
           data: { walletBalance: { increment: tx.amount } }
         })
       })
+
+      // Send Notification
+      await sendAppNotification(
+        tx.userId,
+        'Deposit Approved! 🎉',
+        `₹${tx.amount} has been added to your wallet.`,
+        'deposit',
+        '/wallet'
+      )
     } else {
       // Reject
       await prisma.walletTransaction.update({
@@ -62,6 +72,15 @@ export async function PUT(
           description: 'Payment Failed'
         }
       })
+
+      // Send Notification
+      await sendAppNotification(
+        tx.userId,
+        'Deposit Failed ❌',
+        `Your deposit of ₹${tx.amount} was rejected. (UTR: ${tx.referenceId})`,
+        'deposit',
+        '/wallet'
+      )
     }
 
     return NextResponse.json({ success: true })

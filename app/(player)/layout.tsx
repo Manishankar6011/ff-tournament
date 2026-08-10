@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Home, Trophy, Wallet, User, Bell } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { PushSubscriber } from '@/components/PushSubscriber'
 
 const navItems = [
   { href: '/', icon: Home, label: 'Home' },
@@ -18,6 +19,7 @@ export default function PlayerLayout({ children }: { children: React.ReactNode }
 
   return (
     <div className="min-h-screen bg-[#080812] flex flex-col">
+      <PushSubscriber />
       {/* Main Content */}
       <main className="flex-1 pb-20 overflow-y-auto">
         {children}

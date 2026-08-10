@@ -136,7 +136,7 @@ export default function DepositsPage() {
                     </td>
                     <td className="px-6 py-4">
                       <p className="text-xs text-gray-400">
-                        {new Date(deposit.createdAt).toLocaleString('en-IN', {
+                        {new Date(deposit.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata',
                           day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
                         })}
                       </p>
