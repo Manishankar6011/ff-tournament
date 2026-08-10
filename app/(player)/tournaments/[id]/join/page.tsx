@@ -73,6 +73,17 @@ export default function JoinTournamentPage() {
       return
     }
 
+    const needsTeammates = tournament.mode === 'duo' || tournament.mode === 'squad'
+    if (needsTeammates) {
+      for (let i = 0; i < teammates.length; i++) {
+        const t = teammates[i]
+        if (!t.name || !t.ffUid || !t.ffIgn) {
+          toast.error(`Teammate #${i + 1} ki saari details bharna zaroori hai!`)
+          return
+        }
+      }
+    }
+
     setLoading(true)
     try {
       if (Number(userBalance) >= entryFee) {

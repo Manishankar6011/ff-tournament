@@ -31,7 +31,10 @@ export async function POST(
     const body = await request.json()
     const parsed = joinSchema.safeParse(body)
     if (!parsed.success) {
-      return NextResponse.json({ error: 'Invalid data' }, { status: 400 })
+      return NextResponse.json({ 
+        error: parsed.error.errors[0]?.message || 'Invalid data', 
+        details: parsed.error.errors 
+      }, { status: 400 })
     }
 
     const result = await prisma.$transaction(async (tx) => {
