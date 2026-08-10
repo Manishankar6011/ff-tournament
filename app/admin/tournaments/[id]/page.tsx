@@ -4,6 +4,7 @@ import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Key, ClipboardList, Users, Trophy, Ban } from 'lucide-react'
 import { formatCurrency, getModeLabel, getStatusBadgeColor, getStatusLabel, cn } from '@/lib/utils'
+import { DeleteTournamentButton } from '@/components/DeleteTournamentButton'
 
 export const dynamic = 'force-dynamic'
 export default async function AdminTournamentDetailPage({
@@ -83,6 +84,11 @@ export default async function AdminTournamentDetailPage({
             </span>
             <span className="text-xs text-gray-500">{getModeLabel(tournament.mode)} • {tournament.map}</span>
           </div>
+        </div>
+        <div className="ml-auto">
+          {tournament.status !== 'completed' && tournament.status !== 'cancelled' && (
+            <DeleteTournamentButton tournamentId={tournament.id} />
+          )}
         </div>
       </div>
 

@@ -75,14 +75,6 @@ export default function JoinTournamentPage() {
 
     setLoading(true)
     try {
-      // Create Razorpay order
-      const orderRes = await fetch('/api/wallet/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: entryFee, type: 'entry_fee', tournamentId: id }),
-      })
-      const { orderId } = await orderRes.json()
-
       if (Number(userBalance) >= entryFee) {
         // Use wallet balance directly
         const joinRes = await fetch(`/api/tournaments/${id}/join`, {
@@ -97,6 +89,8 @@ export default function JoinTournamentPage() {
         }
 
         setStep('success')
+      } else {
+        throw new Error('Wallet balance kam hai')
       }
     } catch (err: any) {
       toast.error(err.message || 'Kuch gadbad ho gayi')
