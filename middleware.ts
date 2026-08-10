@@ -28,11 +28,23 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Admin routes protection
-  if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
-    if (!user) {
-      return NextResponse.redirect(new URL('/admin/login', request.url))
+  if (pathname.startsWith('/admin')) {
+    if (pathname === '/admin') {
+      return NextResponse.redirect(new URL('/admin/dashboard', request.url))
     }
-    // Role check is done in individual admin pages via server-side Prisma query
+
+    if (pathname === '/admin/login') {
+      if (user) {
+        // You might want to check the user role here in a real app, 
+        // but for now redirecting to dashboard if already logged in.
+        return NextResponse.redirect(new URL('/admin/dashboard', request.url))
+      }
+    } else {
+      // Non-login admin routes
+      if (!user) {
+        return NextResponse.redirect(new URL('/admin/login', request.url))
+      }
+    }
   }
 
   // Player protected routes

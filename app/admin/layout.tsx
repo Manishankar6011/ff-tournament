@@ -10,6 +10,7 @@ const navItems = [
   { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/admin/tournaments', icon: Trophy, label: 'Tournaments' },
   { href: '/admin/users', icon: Users, label: 'Users' },
+  { href: '/admin/deposits', icon: Wallet, label: 'Deposits' },
   { href: '/admin/withdrawals', icon: Wallet, label: 'Withdrawals' },
   { href: '/admin/reports', icon: BarChart3, label: 'Reports' },
 ]

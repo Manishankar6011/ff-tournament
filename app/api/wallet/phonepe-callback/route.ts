@@ -54,17 +54,23 @@ export async function POST(request: Request) {
     if (statusData.success && statusData.code === 'PAYMENT_SUCCESS') {
       const amountInRupees = statusData.data.amount / 100
 
-      // Use a Prisma transaction to safely update both Tx and User Wallet
-      await prisma.$transaction([
-        prisma.walletTransaction.update({
-          where: { id: existingTx.id },
-          data: { status: 'success' }
-        }),
-        prisma.user.update({
+      // Security: Atomic update to prevent race conditions (double crediting bypass)
+      // We only update if the status is currently 'pending'
+      const updateResult = await prisma.walletTransaction.updateMany({
+        where: { 
+          id: existingTx.id,
+          status: 'pending' 
+        },
+        data: { status: 'success' }
+      })
+
+      if (updateResult.count === 1) {
+        // We successfully transitioned from pending to success, now safely increment user balance
+        await prisma.user.update({
           where: { id: existingTx.userId },
           data: { walletBalance: { increment: amountInRupees } }
         })
-      ])
+      }
 
       return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/wallet?payment=success`)
     } else {

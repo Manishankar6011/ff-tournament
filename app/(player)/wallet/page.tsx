@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react'
 import { Wallet, Plus, ArrowUpRight, ArrowDownLeft, Clock, CheckCircle, XCircle, TrendingUp } from 'lucide-react'
 import { formatCurrency, cn } from '@/lib/utils'
-import { openRazorpayCheckout } from '@/lib/razorpay'
 import { toast } from 'sonner'
 import Link from 'next/link'
+import { QRCodeCanvas } from 'qrcode.react'
 
 interface Transaction {
   id: string
@@ -30,6 +30,11 @@ export default function WalletPage() {
   const [customAmount, setCustomAmount] = useState('')
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null)
   const [addingMoney, setAddingMoney] = useState(false)
+  const [showPaymentFlow, setShowPaymentFlow] = useState(false)
+  const [utrNumber, setUtrNumber] = useState('')
+  
+  const upiId = "70613388@ybl"
+  const upiName = "FF Tournament"
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,7 +62,7 @@ export default function WalletPage() {
     }
   }, [])
 
-  const handleAddMoney = async () => {
+  const handleInitiatePayment = () => {
     const amount = selectedAmount || Number(customAmount)
     if (!amount || amount < 10) {
       toast.error('Minimum ₹10 add karo')
@@ -67,28 +72,48 @@ export default function WalletPage() {
       toast.error('Maximum ₹10,000 ek baar mein add ho sakta hai')
       return
     }
+    setShowPaymentFlow(true)
+  }
 
+  const handleSubmitUtr = async () => {
+    if (utrNumber.length !== 12) {
+      toast.error('UTR 12 digit ka hona chahiye')
+      return
+    }
+
+    const amount = selectedAmount || Number(customAmount)
     setAddingMoney(true)
+    
     try {
-      const res = await fetch('/api/wallet/create-order', {
+      const res = await fetch('/api/wallet/submit-utr', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount, type: 'deposit' }),
+        body: JSON.stringify({ amount, utr: utrNumber }),
       })
       
       const data = await res.json()
       
-      if (data.url) {
-        // Redirect to PhonePe payment page
-        window.location.href = data.url
+      if (res.ok) {
+        toast.success('UTR submitted! Admin jaldi verify kar dega.')
+        setShowPaymentFlow(false)
+        setUtrNumber('')
+        setCustomAmount('')
+        setSelectedAmount(null)
+        // Refresh transactions
+        const tRes = await fetch('/api/wallet/transactions')
+        setTransactions(await tRes.json())
       } else {
-        toast.error(data.error || 'Payment gateway connection failed')
-        setAddingMoney(false)
+        toast.error(data.error || 'Submit karne mein error')
       }
     } catch {
       toast.error('Kuch gadbad ho gayi')
-      setAddingMoney(false)
     }
+    setAddingMoney(false)
+  }
+
+  const getUpiUrl = () => {
+    const amount = selectedAmount || Number(customAmount)
+    return `upi://pay?pa=${upiId}&pn=${encodeURIComponent(upiName)}&am=${amount}&cu=INR`
   }
 
   const txIcon = (type: string) => {
@@ -153,40 +178,86 @@ export default function WalletPage() {
             Paise Add Karo
           </h2>
 
-          {/* Quick Amounts */}
-          <div className="grid grid-cols-3 gap-2 mb-3">
-            {ADD_AMOUNTS.map(amt => (
+          {!showPaymentFlow ? (
+            <>
+              {/* Quick Amounts */}
+              <div className="grid grid-cols-3 gap-2 mb-3">
+                {ADD_AMOUNTS.map(amt => (
+                  <button
+                    key={amt}
+                    onClick={() => { setSelectedAmount(amt); setCustomAmount('') }}
+                    className={cn(
+                      'py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95',
+                      selectedAmount === amt
+                        ? 'bg-orange-500 text-white orange-glow'
+                        : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                    )}
+                  >
+                    ₹{amt}
+                  </button>
+                ))}
+              </div>
+
+              {/* Custom Amount */}
+              <input
+                type="number"
+                placeholder="Ya custom amount type karo..."
+                value={customAmount}
+                onChange={e => { setCustomAmount(e.target.value); setSelectedAmount(null) }}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500 text-sm mb-3"
+              />
+
               <button
-                key={amt}
-                onClick={() => { setSelectedAmount(amt); setCustomAmount('') }}
-                className={cn(
-                  'py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95',
-                  selectedAmount === amt
-                    ? 'bg-orange-500 text-white orange-glow'
-                    : 'bg-white/5 text-gray-300 hover:bg-white/10'
-                )}
+                onClick={handleInitiatePayment}
+                disabled={!selectedAmount && !customAmount}
+                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 disabled:opacity-50 rounded-xl py-3.5 text-white font-bold active:scale-95 transition-all"
               >
-                ₹{amt}
+                Add {selectedAmount ? formatCurrency(selectedAmount) : customAmount ? formatCurrency(Number(customAmount)) : 'Money'}
               </button>
-            ))}
-          </div>
+            </>
+          ) : (
+            <div className="flex flex-col items-center space-y-4 animate-in fade-in slide-in-from-bottom-4">
+              <div className="bg-white p-3 rounded-2xl w-48 h-48 flex items-center justify-center">
+                <QRCodeCanvas value={getUpiUrl()} size={160} />
+              </div>
+              
+              <div className="text-center w-full">
+                <p className="text-sm text-gray-300 mb-1">Scan to pay <strong>{formatCurrency(selectedAmount || Number(customAmount))}</strong></p>
+                <p className="text-xs text-orange-400 font-medium mb-3">UPI: {upiId}</p>
 
-          {/* Custom Amount */}
-          <input
-            type="number"
-            placeholder="Ya custom amount type karo..."
-            value={customAmount}
-            onChange={e => { setCustomAmount(e.target.value); setSelectedAmount(null) }}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500 text-sm mb-3"
-          />
+                <a 
+                  href={getUpiUrl()}
+                  className="w-full inline-flex items-center justify-center bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl py-3 text-white font-bold transition-all mb-4"
+                >
+                  Pay via UPI App
+                </a>
+              </div>
 
-          <button
-            onClick={handleAddMoney}
-            disabled={addingMoney || (!selectedAmount && !customAmount)}
-            className="w-full bg-gradient-to-r from-orange-500 to-orange-600 disabled:opacity-50 rounded-xl py-3.5 text-white font-bold active:scale-95 transition-all"
-          >
-            {addingMoney ? 'Processing...' : `Add ${selectedAmount ? formatCurrency(selectedAmount) : customAmount ? formatCurrency(Number(customAmount)) : 'Money'}`}
-          </button>
+              <div className="w-full border-t border-white/10 pt-4">
+                <p className="text-xs font-medium text-gray-400 mb-2">Payment karne ke baad UTR/Ref No. daalein:</p>
+                <input
+                  type="number"
+                  placeholder="12-digit UTR Number"
+                  value={utrNumber}
+                  onChange={e => setUtrNumber(e.target.value.slice(0, 12))}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 text-sm mb-3 text-center tracking-widest"
+                />
+                <button
+                  onClick={handleSubmitUtr}
+                  disabled={addingMoney || utrNumber.length !== 12}
+                  className="w-full bg-gradient-to-r from-orange-500 to-orange-600 disabled:opacity-50 rounded-xl py-3 text-white font-bold active:scale-95 transition-all"
+                >
+                  {addingMoney ? 'Submitting...' : 'Submit UTR & Verify'}
+                </button>
+                <button
+                  onClick={() => setShowPaymentFlow(false)}
+                  className="w-full mt-2 text-xs text-gray-500 hover:text-white transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Transaction History */}
@@ -215,7 +286,17 @@ export default function WalletPage() {
                     <p className={cn('text-sm font-bold', txColor(tx.type))}>
                       {txSign(tx.type)}{formatCurrency(Number(tx.amount))}
                     </p>
-                    <p className="text-xs text-gray-500 capitalize">{tx.status}</p>
+                    <p className="text-xs text-gray-500 capitalize">
+                      {tx.type === 'deposit' && tx.status === 'pending' ? (
+                        <span className="text-orange-400 flex items-center gap-1 justify-end">
+                          <Clock className="w-3 h-3" /> Verifying
+                        </span>
+                      ) : tx.status === 'failed' ? (
+                        <span className="text-red-400">Payment Failed</span>
+                      ) : (
+                        tx.status
+                      )}
+                    </p>
                   </div>
                 </div>
               ))}
