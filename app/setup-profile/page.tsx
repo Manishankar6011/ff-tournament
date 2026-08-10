@@ -10,12 +10,12 @@ export default function SetupProfilePage() {
   const router = useRouter()
   const supabase = createClient()
 
-  const [form, setForm] = useState({ name: '', ffUid: '', ffIgn: '' })
+  const [form, setForm] = useState({ name: '', phone: '', ffUid: '', ffIgn: '' })
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.name || !form.ffUid || !form.ffIgn) {
+    if (!form.name || !form.phone || !form.ffUid || !form.ffIgn) {
       toast.error('Sab fields bharo')
       return
     }
@@ -45,6 +45,13 @@ export default function SetupProfilePage() {
       placeholder: 'Jaise: Rahul Kumar',
       icon: User,
       type: 'text',
+    },
+    {
+      key: 'phone',
+      label: 'WhatsApp Number',
+      placeholder: '10 digit mobile number',
+      icon: Smartphone,
+      type: 'tel',
     },
     {
       key: 'ffUid',
@@ -106,7 +113,7 @@ export default function SetupProfilePage() {
 
               <button
                 type="submit"
-                disabled={loading || !form.name || !form.ffUid || !form.ffIgn}
+                disabled={loading || !form.name || !form.phone || !form.ffUid || !form.ffIgn}
                 className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-xl transition-all duration-200 active:scale-95 flex items-center justify-center gap-2"
               >
                 {loading ? 'Save ho raha hai...' : (

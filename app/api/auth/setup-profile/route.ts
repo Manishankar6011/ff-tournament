@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic'
 
 const setupSchema = z.object({
   name: z.string().min(2).max(50),
+  phone: z.string().min(10).max(15),
   ffUid: z.string().min(8).max(20),
   ffIgn: z.string().min(2).max(30),
 })
@@ -27,7 +28,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid data', details: parsed.error.errors }, { status: 400 })
     }
 
-    const { name, ffUid, ffIgn } = parsed.data
+    const { name, phone, ffUid, ffIgn } = parsed.data
 
     // Check if FF UID is already taken
     const existingUid = await prisma.user.findFirst({
@@ -43,7 +44,7 @@ export async function POST(request: Request) {
       create: {
         supabaseId: user.id,
         name,
-        phone: user.phone || null,
+        phone,
         email: user.email || null,
         ffUid,
         ffIgn,
@@ -51,6 +52,7 @@ export async function POST(request: Request) {
       },
       update: {
         name,
+        phone,
         ffUid,
         ffIgn,
       },
