@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { User, Gamepad2, Hash, ChevronRight, Flame } from 'lucide-react'
+import { User, Gamepad2, Hash, ChevronRight, Flame, Smartphone } from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function SetupProfilePage() {
