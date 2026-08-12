@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Flame, Filter, ChevronRight, Clock, Users, Trophy, Zap } from 'lucide-react'
 import { formatCurrency, getModeLabel, getStatusBadgeColor, getStatusLabel, getTimeUntilMatch, getSlotsPercentage, cn } from '@/lib/utils'
 import { InstallPWA } from '@/components/InstallPWA'
+import { ShareBanner } from '@/components/ShareBanner'
 
 async function getTournaments(mode?: string, status?: string) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -84,6 +85,8 @@ export default async function HomePage({
           )}
         </div>
       </div>
+
+      <ShareBanner dbUser={dbUser} />
 
       {/* Hero Section */}
       <div className="relative px-4 pt-12 pb-16 overflow-hidden">
