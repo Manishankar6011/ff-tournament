@@ -71,7 +71,7 @@ export default async function AdminDashboardPage() {
   ]
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -88,7 +88,7 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8">
         {stats.map(s => (
           <div key={s.label} className={cn('glass-card rounded-2xl p-5', s.urgent ? 'border border-red-500/30' : 'card-gradient-border')}>
             <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center mb-3', s.bg)}>
@@ -100,7 +100,7 @@ export default async function AdminDashboardPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Today's Tournaments */}
         <div className="col-span-2 glass-card rounded-2xl p-5">
           <div className="flex items-center justify-between mb-4">
