@@ -31,13 +31,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
-      <body className={`${inter.className} bg-[#080812] text-white antialiased`}>
+      <body suppressHydrationWarning className={`${inter.className} bg-[#080812] text-white antialiased`}>
         {children}
         <Toaster
           position="top-center"
