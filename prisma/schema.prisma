@@ -67,6 +67,8 @@ model User {
   avatarUrl      String?  @map("avatar_url")
   isActive             Boolean  @default(true) @map("is_active")
   hasClaimedShareBonus Boolean  @default(false) @map("has_claimed_share_bonus")
+  referralCode   String?  @unique @map("referral_code")
+  referredBy     String?  @map("referred_by")
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
 

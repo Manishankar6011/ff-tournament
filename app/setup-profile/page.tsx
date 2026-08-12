@@ -22,15 +22,19 @@ export default function SetupProfilePage() {
 
     setLoading(true)
     try {
+      const refCode = localStorage.getItem('ff_referral_code')
+      const payload = { ...form, referredByCode: refCode || undefined }
+
       const res = await fetch('/api/auth/setup-profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       })
 
       if (!res.ok) throw new Error('Profile setup failed')
 
       toast.success('Profile ban gaya! 🎉')
+      localStorage.removeItem('ff_referral_code')
       router.push('/')
     } catch {
       toast.error('Kuch gadbad ho gayi, dobara try karo')

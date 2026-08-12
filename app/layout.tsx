@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'sonner'
+import { ReferralTracker } from '@/components/ReferralTracker'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -38,6 +39,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
       <body suppressHydrationWarning className={`${inter.className} bg-[#080812] text-white antialiased`}>
+        <ReferralTracker />
         {children}
         <Toaster
           position="top-center"
